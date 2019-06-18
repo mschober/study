@@ -1,0 +1,21 @@
+let curr, prev;
+
+let topology: {
+  seaLevel: 0,
+  valley: 0,
+  startValley: false,
+}
+
+let example = 'DDUUUDD';
+
+for (let steps of example) {
+  if step === 'U'
+    topology.seaLevel += 1;
+  if step === 'D'
+    topology.seaLevel -= 1;
+  if topology.seaLevel < 0
+    topology.startValley = true
+  if topology.seaLevel === 0 && topology.startValley
+    topology.valley += 1
+    topology.startValley = false;
+}

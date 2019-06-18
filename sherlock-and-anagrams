@@ -1,0 +1,131 @@
+ifailuhkqq
+{ 
+  i: 2
+  f: 1,
+  a: 1,
+  ifa: 1,
+  l: 1,
+  u: 1,
+  h: 1,
+  k: 1,
+  q: 2,
+}
+
+{ 
+  one: {
+    i: 2,
+    f: 1,
+    a: 1,
+    l: 1
+    u: 1,
+    h: 1,
+    k: 1,
+    q: 2
+  }, 
+  two: {
+    if: 1,
+    af: 1,
+    ai: 1,
+    il: 1,
+    lu: 1,
+    hk: 1,
+    hq: 1
+    kq: 1,
+    qq: 1
+  },
+  three: {
+    afi: 2,
+    ail: 1
+  }, 
+  four: {
+    afii: 1,
+    aifl: 1
+  },
+  five: {
+    afiil: 1
+  }
+}
+
+kkkk
+{
+  k: 4,
+  kk: 3,
+  kkk: 2
+  kkkk: 1
+}
+
+{
+  one: {
+    k: 4
+  },
+  two: {
+    kk: 3
+  },
+  three: {
+    kkk: 2
+  },
+  four: {
+    kkkk: 1
+  }
+}
+
+abba
+{ 
+  one: {
+    a: 2,
+    b: 2
+  },
+  two: {
+    ab: 2,
+    bb: 1
+  },
+  three: {
+    abb: 2
+  }
+}
+
+first pass
+for each level
+sort key and add or increment
+second pass
+sum all keys > 1 for value
+
+
+abba
+level 1
+substring(0,1) a
+substring(1,2) b
+substring(2,3) b
+substring(3,4) a
+level 2
+substring(0,2) ab
+substring(1,3) bb
+substring(2,4) ab
+level 3
+substring(0,3) abb
+substring(1,4) bba
+level 4
+substring(0,4) abba
+
+
+k:5 (10) (n-1) + (n-2) + (n-3) + (n-4) = 4 + 3 + 2 + 1
+k:4 (6) (n-1) + (n-2) + (n-3) = 3 + 2 + 1
+kk:3 (3) (n-1) + (n-2) = 2 + 1
+kkk:2 (1) (n-1) = 1
+
+(n-1)(n)/2
+4*5/2
+
+
+(n(n+1))/2
+
+
+01234
+kkkkk
+
+[
+  (0,1), (0,2), (0,3), (0,4)
+  (1,2), (1,3), (1,4)
+  (2,3), (2,4)
+  (3, 4)
+]
