@@ -27,9 +27,9 @@ function minimumSwaps(arr) {
     console.log('current list', i, arr);
     let curr = arr[i]; // 5
     console.log('currVal is', curr);
-    let targetValue = arr[curr - 1]; // 4
+    let targetValue = arr[curr - 1];
     console.log('targetVal is', targetValue);
-    let target = arr[targetValue - 1*i]; // 2
+    let target = arr[targetValue - 1*i];
     console.log('target is', target);
     swap(i, target, arr);
   }
