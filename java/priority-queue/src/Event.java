@@ -14,6 +14,22 @@ public class Event {
         }
     }
 
+    String getQueueAction() {
+        return this.queueAction;
+    }
+
+    String getStudentName() {
+        return this.studentName;
+    }
+
+    double getCgpa() {
+        return this.cgpa;
+    }
+
+    int getID() {
+        return this.id;
+    }
+
     @Override
     public String toString() {
         return "Event{" +

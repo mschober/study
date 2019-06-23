@@ -3,6 +3,15 @@ public class Student  {
     private String name;
     private double cgpa;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cgpa=" + cgpa +
+                '}';
+    }
+
     public Student(int id, String name, double cgpa) {
         this.id = id;
         this.name = name;
@@ -20,4 +29,5 @@ public class Student  {
     double getCGPA() {
         return this.cgpa;
     }
+
 }
