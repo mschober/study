@@ -28,8 +28,10 @@ function readLine() {
 }
 
 
-function countBodies(arr, pos, bodySize) {
-  console.log('pos is', pos);
+function countBodies(arr, pos, bodySize, bodiesMap, data) {
+  let [xNot,yNot] = data;
+  console.log('pos is', pos, bodiesMap);
+  bodySize++;
   function inBounds() {
     let [x,y] = pos;
     return (x >= 0 && y >= 0 && x < arr.length && y < arr.length);
@@ -42,12 +44,11 @@ function countBodies(arr, pos, bodySize) {
     return shouldRecur;
   }
 
-  function recurInAllDirections() {
+  function recurInAllDirections(data) {
     let [x,y] = pos;
-    bodySize++;
     arr[x][y] = -1;
-    console.log(`bodySize ${bodySize}, pos (${x},${y}), arr`, arr);
-    let localBodies = [];
+    bodiesMap[`${xNot}_${yNot}`] += 1;
+    console.log(`pos (${x},${y}), arr`, arr, bodySize);
     let directions = [
       [x-1,y],
       [x-1,y+1],
@@ -59,30 +60,31 @@ function countBodies(arr, pos, bodySize) {
       [x-y,y-1]
     ]
     for (let thisPos of directions) {
-      localBodies.push(countBodies(arr, thisPos, bodySize));
+      countBodies(arr, thisPos, bodySize, bodiesMap, data);
     }
     // console.log('bodySize is', bodySize, localBodies);
-    return bodySize;
   }
 
   if (!inBounds() || !isNewWaterLocation()) {
     return bodySize;
   }
-  else {
-    return recurInAllDirections();
-  }
+  recurInAllDirections(data);
 }
 
 function sortCountedBodies(arr) {
   let bodies = [];
+  let bodiesMap = {};
   for (let col = 0; col < arr.length; col++) {
     for (let row = 0; row < arr.length; row++) {
       console.log('checking location', [row,col], arr);
-      bodies.push(countBodies(arr, [row, col], 0));
+      bodiesMap[`${row}_${col}`] = 0;
+      bodies.push(countBodies(arr, [row, col], 0, bodiesMap, [row,col]));
     }
   }
-  // console.log('bodies are', bodies);
-  return bodies;
+  console.log('final bodiesMap', bodiesMap);
+  return Object.values(bodiesMap).filter((v) => v > 0 )
+  .sort();
+  // return bodies;
 }
 
 function main() {
