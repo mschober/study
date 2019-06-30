@@ -27,7 +27,7 @@ function readLine() {
 function traverseCells(matrix, pos, regionsMap, key) {
   let [x,y] = pos;
   // console.log('matrix is', matrix);
-  console.log('regions map is', regionsMap);
+  // console.log('regions map is', regionsMap);
   function recurInAllDirections() {
     let [x,y] = pos;
     let directions = [
@@ -52,11 +52,12 @@ function traverseCells(matrix, pos, regionsMap, key) {
 
   function outOfBounds() {
     let [x,y] = pos;
-    let oob = (
-        x < 0 ||
-        y < 0 ||
-        x > matrix[x].length ||
-        y > matrix[y].length
+    // console.log('pos is', pos);
+    let oob = !(
+        x >= 0 &&
+        y >= 0 &&
+        x < matrix.length &&
+        y < matrix[x].length
       )
     // console.log('oob is', oob, pos);
     return oob;
@@ -83,9 +84,10 @@ function connectedCell(matrix) {
     for (let j = 0; j < width; j++) {
       let key = `${i}_${j}`;
       regionsMap[key] = 0;
-      return traverseCells(matrix, [i,j], regionsMap, key);
+      traverseCells(matrix, [i,j], regionsMap, key);
     }
   }
+  return Math.max(...Object.values(regionsMap));
 }
 
 function main() {
