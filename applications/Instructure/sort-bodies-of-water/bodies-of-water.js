@@ -28,7 +28,8 @@ function readLine() {
 }
 
 
-function countBodies(arr, pos, bodySize, visited) {
+function countBodies(arr, pos, bodySize) {
+  console.log('pos is', pos);
   function inBounds() {
     let [x,y] = pos;
     return (x >= 0 && y >= 0 && x < arr.length && y < arr.length);
@@ -37,16 +38,16 @@ function countBodies(arr, pos, bodySize, visited) {
   function isNewWaterLocation() {
     let [x,y] = pos;
     let curr = arr[x][y];
-    let shouldRecur = (curr === 0 && !visited[x][y]);
-    visited[x][y] = true;
-    // console.log('should recur', shouldRecur);
+    let shouldRecur = (curr === 0);
     return shouldRecur;
   }
 
   function recurInAllDirections() {
     let [x,y] = pos;
     bodySize++;
-    console.log('pos is', pos, bodySize, visited, !visited[x][y]);
+    arr[x][y] = -1;
+    console.log(`bodySize ${bodySize}, pos (${x},${y}), arr`, arr);
+    let localBodies = [];
     let directions = [
       [x-1,y],
       [x-1,y+1],
@@ -58,8 +59,10 @@ function countBodies(arr, pos, bodySize, visited) {
       [x-y,y-1]
     ]
     for (let thisPos of directions) {
-      return countBodies(arr, thisPos, bodySize, visited);
+      localBodies.push(countBodies(arr, thisPos, bodySize));
     }
+    // console.log('bodySize is', bodySize, localBodies);
+    return bodySize;
   }
 
   if (!inBounds() || !isNewWaterLocation()) {
@@ -71,19 +74,13 @@ function countBodies(arr, pos, bodySize, visited) {
 }
 
 function sortCountedBodies(arr) {
-  let visited = [];
-  for (let i = 0; i < arr.length; i++) { 
-    let row = [...Array(arr.length)].map((_, i) => false);
-    visited.push(row);
-  }
-  console.log('visited is', visited);
   let bodies = [];
   for (let col = 0; col < arr.length; col++) {
     for (let row = 0; row < arr.length; row++) {
-      bodies.push(countBodies(arr, [row, col], 0, visited));
+      console.log('checking location', [row,col], arr);
+      bodies.push(countBodies(arr, [row, col], 0));
     }
   }
-  // countBodies(arr, [0,0], 0, bodies, visited);
   // console.log('bodies are', bodies);
   return bodies;
 }
