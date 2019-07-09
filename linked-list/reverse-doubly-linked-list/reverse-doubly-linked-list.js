@@ -94,19 +94,27 @@ function printDoublyLinkedListNoStream(node, sep) {
  *     DoublyLinkedListNode next;
  *     DoublyLinkedListNode prev;
  * }
- *
+ *  [1] <-> [3] <-> [9] <-> [5] -> Null
+ *  
+ *  [N] <- [3] <-> [9] <-> [5] -> Null
+ *  |      |       | |     |      |
+ *  p      c       t p     c      t
+ *    
  */
 function reverse(head) {
   if (!head || !head.next) {
     return head;
   }
   let curr = head;
-  let toPrint = '';
+  let prev, temp;
   while(curr) {
-    toPrint += curr.data;
-    curr = curr.next;
+    prev = curr.prev; // start a pointer at prev
+    temp = curr.next; // save next of curr
+    curr.next = prev; // point curr next to prev
+    curr.prev = temp;
+    curr = temp; // move curr forward
   }
-  return head;
+  return prev.prev;
 }
 
 function main() {

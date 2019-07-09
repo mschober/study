@@ -1,0 +1,42 @@
+
+function countBodies(arr, pos, bodySize, bodiesMap, data) {
+  let [xNot,yNot] = data;
+  console.log('pos is', pos, bodiesMap);
+  bodySize++;
+  function inBounds() {
+    let [x,y] = pos;
+    return (x >= 0 && y >= 0 && x < arr.length && y < arr.length);
+  }
+
+  function isNewWaterLocation() {
+    let [x,y] = pos;
+    let curr = arr[x][y];
+    let shouldRecur = (curr === 0);
+    return shouldRecur;
+  }
+
+  function recurInAllDirections(data) {
+    let [x,y] = pos;
+    arr[x][y] = -1;
+    bodiesMap[`${xNot}_${yNot}`] += 1;
+    console.log(`pos (${x},${y}), arr`, arr, bodySize);
+    let directions = [
+      [x-1,y],
+      [x-1,y+1],
+      [x,y+1],
+      [x+1,y+1],
+      [x+1,y],
+      [x+1,y-1],
+      [x,y-1],
+      [x-y,y-1]
+    ]
+    for (let thisPos of directions) {
+      countBodies(arr, thisPos, bodySize, bodiesMap, data);
+    }
+  }
+
+  if (!inBounds() || !isNewWaterLocation()) {
+    return bodySize;
+  }
+  recurInAllDirections(data);
+}

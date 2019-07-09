@@ -62,7 +62,6 @@ function countBodies(arr, pos, bodySize, bodiesMap, data) {
     for (let thisPos of directions) {
       countBodies(arr, thisPos, bodySize, bodiesMap, data);
     }
-    // console.log('bodySize is', bodySize, localBodies);
   }
 
   if (!inBounds() || !isNewWaterLocation()) {
@@ -76,7 +75,6 @@ function sortCountedBodies(arr) {
   let bodiesMap = {};
   for (let col = 0; col < arr.length; col++) {
     for (let row = 0; row < arr.length; row++) {
-      console.log('checking location', [row,col], arr);
       bodiesMap[`${row}_${col}`] = 0;
       bodies.push(countBodies(arr, [row, col], 0, bodiesMap, [row,col]));
     }
@@ -84,8 +82,8 @@ function sortCountedBodies(arr) {
   console.log('final bodiesMap', bodiesMap);
   return Object.values(bodiesMap).filter((v) => v > 0 )
   .sort();
-  // return bodies;
 }
+
 
 function main() {
     const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
