@@ -35,7 +35,7 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
   }
 
   function checkForFound() {
-    console.log('word.length, key, visited', word.length, key, visited[key]);
+    // console.log('word.length, key, visited', word.length, key, visited[key]);
     if (visited[key] && word.length === visited[key].length) {
       console.log('found it!');
       found.f = true;
@@ -91,7 +91,6 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
     checkForWord(grid, pos, word, visited, dirVector, key, found, calls);
   }
 
-
   // recurs until bounds or mismatched letters or found
   if (checkForFound()) {
     console.log('exit end');
@@ -99,7 +98,7 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
   }
   let directions = [
     // [-1, 0], //up
-    // [1, 0], //down
+    [1, 0], //down
     [0, -1], //left
     // [0, 1], //right
   ];
@@ -108,8 +107,8 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
     // delete visited[key];
     key = computeKey(startPos, dir);
     // visited[key] = [];
-    // pos = applyDirectionVector(startPos, dir);
-    pos = startPos;
+    pos = applyDirectionVector(startPos, dir);
+    // pos = startPos;
     console.log('direction updated!', dir);
     checkForWord(grid, startPos, word, visited, dir, key, found, calls);
   }
@@ -200,22 +199,27 @@ let cases = [
     word: 'cba',
     success: true
   },
-  { //too far forwards horizontal
-    word: 'abcd',
-    success: false
-  },
-  { //too far backwards horizontal
-    word: 'cbaz',
-    success: false
-  },
-  { //forwars different row
-    word: 'def',
-    success: true
-  },
-  { //wrong letters 3rd row
-    word: 'hii',
-    success: false
-  }
+  // { //too far forwards horizontal
+  //   word: 'abcd',
+  //   success: false
+  // },
+  // { //too far backwards horizontal
+  //   word: 'cbaz',
+  //   success: false
+  // },
+  // { //forwars different row
+  //   word: 'def',
+  //   success: true
+  // },
+  // { //wrong letters 3rd row
+  //   word: 'hii',
+  //   success: false
+  // },
+  // {
+  //   word: 'adh',
+  //   success: true
+  // }
+
   // { //fails when last letter doesn't match
   //   word: 'dee',
   //   success: false
