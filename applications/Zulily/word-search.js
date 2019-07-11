@@ -1,7 +1,6 @@
 let { assert } = require('chai');
 
-function checkForWord(grid, pos, word, visited, key, dirVector, found) {
-  
+function checkForWord(grid, pos, word, visited, dirVector, key, found) {
   function outOfBounds() {
     let [i,j] = pos;
     let size = grid.length;
@@ -12,9 +11,6 @@ function checkForWord(grid, pos, word, visited, key, dirVector, found) {
     
     if (i >= size) {
       console.log('oob down', pos);
-      if (dirVector[0] === 1) {
-        visited[key] = [];
-      }
       return true;
     }
     
@@ -25,111 +21,132 @@ function checkForWord(grid, pos, word, visited, key, dirVector, found) {
     
     if (j >= size) {
       console.log('oob right', pos, dirVector);
-      if (dirVector[1] === 1) {
-        visited[key] = [];
-      }
       return true;
     }
     return false;
   }
   
-  function applyDirectionVector() {
+  function applyDirectionVector(pos, dir) {
     let [i,j] = pos;
     // console.log('dir is', dirVector);
-    let updatedX = i + dirVector[0];
-    let updatedY = j + dirVector[1];
+    let updatedX = i + dir[0];
+    let updatedY = j + dir[1];
     return [updatedX, updatedY];
   }
-  
-  function alreadyVisited() {
-    let entry = visited[key];
-    if (entry) {
-      console.log('already visited', key)
+
+  function checkForFound() {
+    console.log('word.length, key, visited', word.length, key, visited[key]);
+    if (visited[key] && word.length === visited[key].length) {
+      console.log('found it!');
+      found.f = true;
       return true;
     }
     else {
+      console.log('not found');
       return false;
-    };
+    }
+  }
+
+  function alreadyVisited() {
+    return (visited[key] && visited[key] > 0);
   }
   
-  // apply the direction vector and update the pos
-  pos = applyDirectionVector()
-  // key = computeKey(pos, dirVector);
-  if (found.f || outOfBounds()) {
-    return found.f; 
+  // let key = computeKey(pos, dirVector);
+  if (outOfBounds() || alreadyVisited()) {
+    return found; 
   }
+  if (checkForFound()) {
+    console.log('exit beginning');
+    return found;
+  }
+
+  let startPos = pos;
   
   let [i,j] = pos;
   let curr = grid[i][j];
 
-  console.log('checking', visited, curr, pos, dirVector);
-  let wordIndex = visited[key].length;
-  let compareLetter = word[wordIndex];
+  console.log('checking', curr, visited, pos, dirVector);
+  let wordIndex;
+  if (visited[key]) {
+    wordIndex = visited[key].length;
+    console.log('get word index', wordIndex, key);
+    let compareLetter = word[wordIndex];
 
-  if (curr !== compareLetter) {
-    console.log('letter mismatch', curr, compareLetter);
-    return false;
+    if (curr !== compareLetter) {
+      console.log('letter mismatch', curr, compareLetter);
+      return found;
+    }
+    
+    console.log('matched!', curr, compareLetter);
+    visited[key].push(curr);
+    console.log('visited updated', visited);
   }
-  
-  console.log('matched!', curr, compareLetter);
-  visited[key].push(curr);
-  console.log('visited updated', visited);
+  else {
+    console.log('initialize visited', key);
+    visited[key] = [];
+  }
 
-  if (wordIndex === word.length -1) {
-    found.f = true;
-    console.log('found it!');
-    return true;
+  pos = applyDirectionVector(pos, dirVector)
+  checkForWord(grid, pos, word, visited, dirVector, key, found);
+  if (checkForFound()) {
+    console.log('exit end');
+    return found;
   }
-  
   let directions = [
     // [-1, 0], //up
-    
     // [1, 0], //down
     [0, -1], //left
     [0, 1], //right
   ];
   
-  let direction = dirVector;
   for (let dir of directions) {
-    let hasDirection = ((dirVector[0] + dirVector[1]) !== 0);
-    if (!hasDirection) {
-      direction = dir;
-      key = computeKey(pos, direction);
-    }
-    checkForWord(grid, pos, word, visited, key, direction, found);
+    delete visited[key];
+    key = computeKey(startPos, dir);
+    visited[key] = [];
+    // pos = applyDirectionVector(startPos, dir);
+    console.log('direction updated!', dir);
+    checkForWord(grid, startPos, word, visited, dir, key, found);
   }
+  return found;
 }
 
 function computeKey(pos, dir) {
   // console.log('direction is', dir);
-  return pos[0].toString() + '_' +
-         pos[1].toString();// + '_' +
+  return pos[0].toString() +
+         pos[1].toString() + '_' +
+         dir[0].toString() + dir[1].toString();
          
 }
 
 function wordExists(grid, word) {
   let visited = {};
-  let found = { f: false };
   let i = 0;
+  let found = { f: false };
   while (i < grid.length && !found.f) {
     let j = 0;
     while (j < grid.length && !found.f) {
-      let dirVector = [0,0];
+      let dirVector = [0,1];
       let pos = [i,j];
       let key = computeKey(pos, dirVector);
       visited[key] = [];
-      console.log('next element to check', grid[i][j], found);
-      checkForWord(grid, pos, word, visited, key, dirVector, found);
+      console.log('next element to check', grid[0][j], found);
+      found = checkForWord(grid, pos, word, visited, dirVector, key, found);
+      console.log('did i find it', found);
       j++;
+      // break;
     }
+    break;
     i++;
+    console.log('new row started', i);
   }
   return found.f;
 }
 
 
 let smallGrid = [
-  ['a', 'b'],
+  ['a', 'b', 'c', 'd'],
+  ['d', 'e'],
+  ['d', 'e'],
   ['d', 'e']
 ];
 
@@ -138,18 +155,26 @@ let smallCases = [
     word: 'ab',
     success: true
   },
-  { //finds down
-    word: 'ad',
+  { //finds across backwards
+    word: 'cb',
     success: true
-  },
-  { //walks off width
-    word: 'abb',
-    success: false
-  },
-  { //walks off height
-    word: 'add',
-    success: false
   }
+  // { //finds down
+  //   word: 'ad',
+  //   success: true
+  // },
+  // { //walks off width
+  //   word: 'abb',
+  //   success: false
+  // },
+  // { //walks off height
+  //   word: 'add',
+  //   success: false
+  // },
+  // {
+  //   word: 'ba',
+  //   success: true
+  // }
 ]
 
 let grid = [
@@ -159,10 +184,10 @@ let grid = [
 ];
 
 let cases = [
-  // { //base case
-  //   word: 'abc',
-  //   success: true
-  // },
+  { //base case
+    word: 'abc',
+    success: true
+  },
   // { //works down
   //   word: 'adh',
   //   success: true
@@ -187,10 +212,10 @@ let cases = [
   //   word: 'adhj',
   //   success: false
   // },
-  {
-    word: 'cb',
-    success: true
-  }
+  // {
+  //   word: 'cb',
+  //   success: true
+  // }
 ]
 
 for (let testCase of cases) {
