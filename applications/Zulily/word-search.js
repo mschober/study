@@ -109,6 +109,7 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
     key = computeKey(startPos, dir);
     // visited[key] = [];
     // pos = applyDirectionVector(startPos, dir);
+    pos = startPos;
     console.log('direction updated!', dir);
     checkForWord(grid, startPos, word, visited, dir, key, found, calls);
   }
@@ -195,6 +196,18 @@ let cases = [
     word: 'abc',
     success: true
   },
+  {
+    word: 'cba',
+    success: true
+  },
+  {
+    word: 'abcd',
+    success: false
+  },
+  {
+    word: 'cbaz',
+    success: false
+  }
   // { //fails when last letter doesn't match
   //   word: 'dee',
   //   success: false
