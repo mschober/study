@@ -132,7 +132,7 @@ function wordExists(grid, word) {
     let j = 0;
     while (j < grid.length && !found.f) {
       let dirVector = [0,1];
-      let pos = [0,j];
+      let pos = [i,j];
       let key = computeKey(pos, dirVector);
       // if (!visited[key]) {
       //   visited[key] = [];
@@ -196,16 +196,24 @@ let cases = [
     word: 'abc',
     success: true
   },
-  {
+  { //backwards horizontal
     word: 'cba',
     success: true
   },
-  {
+  { //too far forwards horizontal
     word: 'abcd',
     success: false
   },
-  {
+  { //too far backwards horizontal
     word: 'cbaz',
+    success: false
+  },
+  { //forwars different row
+    word: 'def',
+    success: true
+  },
+  { //wrong letters 3rd row
+    word: 'hii',
     success: false
   }
   // { //fails when last letter doesn't match
