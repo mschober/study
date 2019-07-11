@@ -1,6 +1,6 @@
 let { assert } = require('chai');
 
-function checkForWord(grid, pos, word, visited, dirVector, key, found) {
+function checkForWord(grid, pos, word, visited, dirVector, key, found, calls) {
   function outOfBounds() {
     let [i,j] = pos;
     let size = grid.length;
@@ -52,7 +52,7 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found) {
   }
   
   // let key = computeKey(pos, dirVector);
-  if (outOfBounds() || alreadyVisited()) {
+  if (outOfBounds() || alreadyVisited() || calls > 5) {
     return found; 
   }
   if (checkForFound()) {
@@ -60,6 +60,8 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found) {
     return found;
   }
 
+  calls++;
+  console.log('calls are', calls);
   let startPos = pos;
   
   let [i,j] = pos;
@@ -80,14 +82,17 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found) {
     console.log('matched!', curr, compareLetter);
     visited[key].push(curr);
     console.log('visited updated', visited);
+    pos = applyDirectionVector(pos, dirVector)
+    checkForWord(grid, pos, word, visited, dirVector, key, found, calls);
   }
   else {
     console.log('initialize visited', key);
     visited[key] = [];
+    checkForWord(grid, pos, word, visited, dirVector, key, found, calls);
   }
 
-  pos = applyDirectionVector(pos, dirVector)
-  checkForWord(grid, pos, word, visited, dirVector, key, found);
+
+  // recurs until bounds or mismatched letters or found
   if (checkForFound()) {
     console.log('exit end');
     return found;
@@ -96,16 +101,16 @@ function checkForWord(grid, pos, word, visited, dirVector, key, found) {
     // [-1, 0], //up
     // [1, 0], //down
     [0, -1], //left
-    [0, 1], //right
+    // [0, 1], //right
   ];
   
   for (let dir of directions) {
-    delete visited[key];
+    // delete visited[key];
     key = computeKey(startPos, dir);
-    visited[key] = [];
+    // visited[key] = [];
     // pos = applyDirectionVector(startPos, dir);
     console.log('direction updated!', dir);
-    checkForWord(grid, startPos, word, visited, dir, key, found);
+    checkForWord(grid, startPos, word, visited, dir, key, found, calls);
   }
   return found;
 }
@@ -126,19 +131,21 @@ function wordExists(grid, word) {
     let j = 0;
     while (j < grid.length && !found.f) {
       let dirVector = [0,1];
-      let pos = [i,j];
+      let pos = [0,j];
       let key = computeKey(pos, dirVector);
-      visited[key] = [];
-      console.log('next element to check', grid[0][j], found);
-      found = checkForWord(grid, pos, word, visited, dirVector, key, found);
+      // if (!visited[key]) {
+      //   visited[key] = [];
+      // };
+      console.log('next element to check', grid[i][j], found);
+      found = checkForWord(grid, pos, word, visited, dirVector, key, found, 0);
       console.log('did i find it', found);
       j++;
-      // break;
     }
-    break;
+    // break;
     i++;
     console.log('new row started', i);
   }
+  console.log('finished!');
   return found.f;
 }
 
@@ -188,10 +195,6 @@ let cases = [
     word: 'abc',
     success: true
   },
-  // { //works down
-  //   word: 'adh',
-  //   success: true
-  // },
   // { //fails when last letter doesn't match
   //   word: 'dee',
   //   success: false
@@ -207,6 +210,10 @@ let cases = [
   // { //fails because of direction and too many characters
   //   word: 'abcd',
   //   success: false
+  // },
+  // { //works down
+  //   word: 'adh',
+  //   success: true
   // },
   // {
   //   word: 'adhj',
