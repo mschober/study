@@ -39,8 +39,8 @@ function binGap2(num) {
   return gaps;
 }
 
-function binGap(bin) {
-  // let bin = num.toString(2);
+function binGap(num) {
+  let bin = num.toString(2);
   let i = 0;
   let curr = parseInt(bin[i]);
   console.log('check', bin, curr);
@@ -75,17 +75,25 @@ function binGap(bin) {
 
 
 let cases = [
-  // {
-  //   num: '1001',
-  //   expected: 2
-  // },
   {
-    num: '10001001000000001',
+    num: 9,
+    expected: 2
+  },
+  {
+    num: 70145,
     expected: 8
   },
   {
-    num: '100',
+    num: 4,
     expected: 0
+  },
+  {
+    num: 18,
+    expected: 2
+  },
+  {
+    num: 72,
+    expected: 2
   }
 ];
 for (let test of cases) {
