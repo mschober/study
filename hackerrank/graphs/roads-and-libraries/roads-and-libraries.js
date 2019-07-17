@@ -67,6 +67,7 @@ function roadsAndLibraries(n, c_lib, c_road, roads) {
     if (!visited[city]) {
       queue.push(...citiesGraph[city]);
       visited[city] = true;
+      delete citiesGraph[city];
     }
   }
   console.log('visited', visited);
