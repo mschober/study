@@ -61,6 +61,8 @@ function roadsAndLibraries(n, c_lib, c_road, roads) {
   console.log('citiesGraph', citiesGraph);
   let visited = {};
   let seed;
+  let clusters = [];
+  let clusterIndex = 0;
   while (Object.values(citiesGraph).length > 0) {
     seed = Object.values(citiesGraph)[0];
     let queue = [...seed];
@@ -70,13 +72,30 @@ function roadsAndLibraries(n, c_lib, c_road, roads) {
       if (!visited[city]) {
         queue.push(...citiesGraph[city]);
         visited[city] = true;
+        if (!clusters[clusterIndex]) clusters[clusterIndex] = [city];
+        else clusters[clusterIndex].push(city);
         delete citiesGraph[city];
       }
     }
+    clusterIndex++;
   }
+
+  let clusterCount = clusters.length;
+  let cityCount = clusters.map(c => c.length).reduce((a,b) => a+b);
 
   console.log('visited', visited);
   console.log('citiesGraph', citiesGraph);
+  console.log('clusters', clusters);
+  console.log('clusterCount, cityCount', clusterCount, cityCount);
+  let eq1 = c_road * cityCount + c_lib * clusterCount;
+  let eq2 = c_lib * cityCount;
+  console.log(`c_lib: ${c_lib}; c_road: ${c_road}
+eq 1: Cr * numCities + Cl * numClusters ${eq1}
+eq 2: Cl * numCities ${eq2}
+`)
+  let result = Math.min(eq1, eq2);
+  console.log('min is', result);
+  return result;
 }
 
 function main() {
