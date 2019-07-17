@@ -31,12 +31,13 @@ class City {
   }
 }
 
-function addCity(graph, road) {
+function addCity(n, graph, road) {
   let origin = road[0];
   let dest = road[1];
 
   if (!graph[origin]) {
     graph[origin] = [dest];
+    n--;
   }
   else {
     graph[origin].push(dest);
@@ -44,20 +45,33 @@ function addCity(graph, road) {
 
   if (!graph[dest]) {
     graph[dest] = [origin];
+    n--;
   }
   else {
     graph[dest].push(origin);
   }
+  return n;
 }
 
 // Complete the roadsAndLibraries function below.
 function roadsAndLibraries(n, c_lib, c_road, roads) {
   let citiesGraph = {};
   let i = 0;
-  while(i < roads.length) {
-    addCity(citiesGraph, roads[i]);
-    i++;
+  console.log('n is', n);
+  while (n > 0) {
+    while(i < roads.length) {
+      n = addCity(n, citiesGraph, roads[i]);
+      i++;
+    }
+    if (n > 0) {
+      console.log('n is', n);
+      citiesGraph[Object.values(citiesGraph).length + 1] = [Object.values(citiesGraph).length + 1];
+    }
+    n--;
   }
+  console.log('n is', n);
+
+
   console.log('citiesGraph', citiesGraph);
   let visited = {};
   let seed;
@@ -82,15 +96,19 @@ function roadsAndLibraries(n, c_lib, c_road, roads) {
 
   let clusterCount = clusters.length;
   let cityCount = clusters.map(c => c.length).reduce((a,b) => a+b);
-
+  let minRoadCounts = clusters.map(c => c.length - 1);
+  console.log('min road counts', minRoadCounts);
+  let minRoads = minRoadCounts.reduce((a,b) => a+b);
+  
   console.log('visited', visited);
   console.log('citiesGraph', citiesGraph);
   console.log('clusters', clusters);
   console.log('clusterCount, cityCount', clusterCount, cityCount);
-  let eq1 = c_road * cityCount + c_lib * clusterCount;
+
+  let eq1 = c_road * minRoads + c_lib * clusterCount;
   let eq2 = c_lib * cityCount;
   console.log(`c_lib: ${c_lib}; c_road: ${c_road}
-eq 1: Cr * numCities + Cl * numClusters ${eq1}
+eq 1: Cr * minRoads + Cl * numClusters ${eq1}
 eq 2: Cl * numCities ${eq2}
 `)
   let result = Math.min(eq1, eq2);
