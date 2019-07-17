@@ -60,16 +60,21 @@ function roadsAndLibraries(n, c_lib, c_road, roads) {
   }
   console.log('citiesGraph', citiesGraph);
   let visited = {};
-  let seed = Object.values(citiesGraph)[0];
-  let queue = [...seed];
-  while (queue.length > 0) {
-    let city = queue.shift();
-    if (!visited[city]) {
-      queue.push(...citiesGraph[city]);
-      visited[city] = true;
-      delete citiesGraph[city];
+  let seed;
+  while (Object.values(citiesGraph).length > 0) {
+    seed = Object.values(citiesGraph)[0];
+    let queue = [...seed];
+    console.log('starting cluster', seed);
+    while (queue.length > 0) {
+      let city = queue.shift();
+      if (!visited[city]) {
+        queue.push(...citiesGraph[city]);
+        visited[city] = true;
+        delete citiesGraph[city];
+      }
     }
   }
+
   console.log('visited', visited);
   console.log('citiesGraph', citiesGraph);
 }
