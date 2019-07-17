@@ -1,0 +1,28 @@
+a b c d
+1 2 3 4
+      \
+        m n o
+        5 6 7
+      /
+    1 2
+    z x
+
+i=0     i=5
+p1=na   p1=nn
+p2=nz   p2=na
+
+i=1     i=6
+p1=nb   p1=no
+p2=nx   p2=nb
+
+i=2     i=7
+p1=nc   p1=nz
+p2=nm   p2=nc
+
+i=3     i=8
+p1=nd   p1=nx
+p2=nn   p2=nd
+
+i=4     i=9
+p1=nm   p1=nm
+p2=no   p2=nm

@@ -1,16 +1,5 @@
 let { assert } = require('chai');
 
-let tests = [
-  {
-    arr: [7, 1, 3, 2, 4, 5, 6],
-    ans: 5
-  },
-  {
-    arr: [4, 3, 1, 2],
-    ans: 3
-  }
-]
-
 function minimumSwaps(arr) {
 
   let i = 0;
@@ -43,6 +32,17 @@ function minimumSwaps(arr) {
   }
   return swapCount;
 }
+
+let tests = [
+  {
+    arr: [7, 1, 3, 2, 4, 5, 6],
+    ans: 5
+  },
+  {
+    arr: [4, 3, 1, 2],
+    ans: 3
+  }
+]
 
 for (let test of tests) {
   assert.deepEqual(minimumSwaps(test.arr), test.ans);
