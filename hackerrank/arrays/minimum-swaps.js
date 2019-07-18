@@ -1,49 +1,102 @@
 let { assert } = require('chai');
 
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function swap(arr, curr, tgt) {
+  let temp = arr[tgt];
+  arr[tgt] = arr[curr];
+  arr[curr] = temp;
+}
+// Complete the minimumSwaps function below.
+
 function minimumSwaps(arr) {
-
   let i = 0;
-  let swapCount = 0;
-  while (i < arr.length && swapCount < 10) {
-    console.log('outer loop', swapCount);
-    while (i < arr.length && arr[i] === i +1) {
-      console.log('increment i', i);
-      i++;  
+  let swaps = 0;
+  while (i < arr.length) {
+    while (arr[i] === i + 1) {
+      // console.log(arr[i], i);
+      i++;
     }
+    // console.log('i', i);
     if (i === arr.length) {
-      break;
-    }    
-    console.log('current list', i, arr);
-    let curr = arr[i]; // 5
-    console.log('currVal is', curr);
-    let targetValue = arr[curr - 1];
-    console.log('targetVal is', targetValue);
-    let target = arr[targetValue - 1*i];
-    console.log('target is', target);
-    swap(i, target, arr);
+      // console.log('break!');
+      return swaps;
+    }
+    // console.log('arr is', arr);
+    let curr = arr[i];
+    // console.log(`${curr} wants to be at ${curr - 1}`);
+    // PERFECT SWAP!
+    if (arr[arr[curr - 1] - 1] === arr[i]) {
+      // console.log('perfect swap!');
+      swap(arr, i, curr - 1);
+    }
+    else {
+      let swapSpot = arr[curr - 1] - 1;
+      // console.log(`swap spot is ${swapSpot}`);
+      // console.log(`${arr[curr - 1]} wants to be at ${arr[curr - 1] - 1}`)
+      // console.log(`swap ${arr[i]} with ${arr[arr[curr - 1] -1]}`);
+      swap(arr, i, swapSpot);
+    }
+    swaps++;
+    // break;
   }
-
-  function swap(curr, target, arr) {
-    console.log(`swapped ${arr[curr]} with ${arr[target]}`);
-    let temp = arr[target];
-    arr[target] = arr[curr];
-    arr[curr] = temp;
-    swapCount++;
-  }
-  return swapCount;
+  return swaps;
 }
 
-let tests = [
-  {
-    arr: [7, 1, 3, 2, 4, 5, 6],
-    ans: 5
-  },
-  {
-    arr: [4, 3, 1, 2],
-    ans: 3
-  }
-]
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
 
-for (let test of tests) {
-  assert.deepEqual(minimumSwaps(test.arr), test.ans);
+    const n = parseInt(readLine(), 10);
+
+    const arr = readLine().split(' ').map(arrTemp => parseInt(arrTemp, 10));
+
+    const res = minimumSwaps(arr);
+
+    ws.write(res + '\n');
+
+    ws.end();
 }
+
+
+// let tests = [
+//   {
+//     arr: [7, 1, 3, 2, 4, 5, 6],
+//     ans: 5
+//   },
+//   {
+//     arr: [4, 3, 1, 2],
+//     ans: 3
+//   },
+//   {
+//     arr: [7, 3, 1, 2, 6, 4, 5],
+//     ans: 6
+//   }
+// ]
+
+// for (let test of tests) {
+//   assert.deepEqual(minimumSwaps(test.arr), test.ans);
+// }
